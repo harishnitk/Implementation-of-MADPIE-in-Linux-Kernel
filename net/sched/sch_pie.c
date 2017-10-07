@@ -43,6 +43,7 @@ struct pie_params {
 	u32 limit;		/* number of packets that can be enqueued */
 	u32 alpha;		/* alpha and beta are between 0 and 32 */
 	u32 beta;		/* and are used for shift relative to 1 */
+	psched_time_t hard_delay; /* default 30ms */
 	bool ecn;		/* true if ecn is enabled */
 	bool bytemode;		/* to scale drop early prob based on pkt size */
 };
@@ -85,6 +86,7 @@ static void pie_params_init(struct pie_params *params)
 	params->target = PSCHED_NS2TICKS(20 * NSEC_PER_MSEC);	/* 20 ms */
 	params->ecn = false;
 	params->bytemode = false;
+	params->hard_delay=30; /* default 30ms */
 }
 
 static void pie_vars_init(struct pie_vars *vars)
@@ -157,7 +159,8 @@ static int pie_qdisc_enqueue(struct sk_buff *skb, struct Qdisc *sch,
 	}
 
 	/* we can enqueue the packet */
-	if (enqueue) {
+	if ((enqueue) && (q->vars.qdelay <= q->params.hard_delay)) {
+	
 		q->stats.packets_in++;
 		if (qdisc_qlen(sch) > q->stats.maxq)
 			q->stats.maxq = qdisc_qlen(sch);
