@@ -86,7 +86,7 @@ static void pie_params_init(struct pie_params *params)
 	params->target = PSCHED_NS2TICKS(20 * NSEC_PER_MSEC);	/* 20 ms */
 	params->ecn = false;
 	params->bytemode = false;
-	params->hard_delay=30; /* default 30ms */
+	params->hard_delay=PSCHED_NS2TICKS(30 * NSEC_PER_MSEC); /* default 30ms */
 }
 
 static void pie_vars_init(struct pie_vars *vars)
@@ -120,6 +120,9 @@ static bool drop_early(struct Qdisc *sch, u32 packet_size)
 	 */
 	if (sch->qstats.backlog < 2 * mtu)
 		return false;
+		
+	if(q->vars.qdelay <= q->params.hard_delay)
+		return false;
 
 	/* If bytemode is turned on, use packet size to compute new
 	 * probablity. Smaller packets will have lower drop prob in this case
@@ -128,7 +131,7 @@ static bool drop_early(struct Qdisc *sch, u32 packet_size)
 		local_prob = (local_prob / mtu) * packet_size;
 	else
 		local_prob = q->vars.prob;
-
+	
 	rnd = prandom_u32();
 	if (rnd < local_prob)
 		return true;
@@ -167,6 +170,10 @@ static int pie_qdisc_enqueue(struct sk_buff *skb, struct Qdisc *sch,
 
 		return qdisc_enqueue_tail(skb, sch);
 	}
+	else
+	{
+		goto out;
+	}	
 
 out:
 	q->stats.dropped++;
