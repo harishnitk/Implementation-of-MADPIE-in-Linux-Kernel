@@ -180,9 +180,10 @@ static int pie_qdisc_enqueue(struct sk_buff *skb, struct Qdisc *sch,
 
 		return qdisc_enqueue_tail(skb, sch);
 	}
-	else
+	else if(enqueue && m_maxProb)
 	{
 		m_maxProb = false;
+		goto out;
 	}
 
 out:
