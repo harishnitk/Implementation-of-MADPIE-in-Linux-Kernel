@@ -43,11 +43,12 @@ struct pie_params {
 	u32 limit;		/* number of packets that can be enqueued */
 	u32 alpha;		/* alpha and beta are between 0 and 32 */
 	u32 beta;		/* and are used for shift relative to 1 */
-	psched_time_t hard_delay; /* default 30ms */
 	bool ecn;		/* true if ecn is enabled */
 	bool bytemode;		/* to scale drop early prob based on pkt size */
-	bool isMADPIE; 		/*to decide MADPIE is enable or disable*/
+	bool isMADPIE; 		/* to enable or disable MADPIE */
 	bool m_maxProb;
+	psched_time_t hard_delay; /* default 30ms */
+
 };
 
 /* variables used */
@@ -125,14 +126,11 @@ static bool drop_early(struct Qdisc *sch, u32 packet_size)
 	if (sch->qstats.backlog < 2 * mtu)
 		return false;
 
-	/*
-	* if m_maxProb is set and isMADPIE is enabled don't mark the packet
-	*/
-	if (q->params.isMADPIE && q->params.m_maxProb) {
-	
+	/* If m_maxProb is set and isMADPIE is enabled,
+	 * don't mark the packet
+	 */
+	if (q->params.isMADPIE && q->params.m_maxProb)
 		return false;
-	}
-
 
 	/* If bytemode is turned on, use packet size to compute new
 	 * probablity. Smaller packets will have lower drop prob in this case
@@ -180,7 +178,7 @@ static int pie_qdisc_enqueue(struct sk_buff *skb, struct Qdisc *sch,
 
 		return qdisc_enqueue_tail(skb, sch);
 	}
-	/* drop the packet if m_maxProb is set and pie decides to enqueue the packet */
+	/* drop the packet if m_maxProb is set and PIE decides to enqueue the packet */
 	else if (enqueue && q->params.m_maxProb) {
 	
 		q->params.m_maxProb = false;
@@ -404,10 +402,8 @@ static void calculate_probability(struct Qdisc *sch)
 
 	q->vars.prob += delta;
 
-	if (q->params.isMADPIE && (q->vars.qdelay>q->params.hard_delay)) {
-	
+	if (q->params.isMADPIE && (q->vars.qdelay>q->params.hard_delay))
 		q->params.m_maxProb = true;
-	}
 
 	if (delta > 0) {
 		/* prevent overflow */
