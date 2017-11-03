@@ -177,7 +177,7 @@ static int pie_qdisc_enqueue(struct sk_buff *skb, struct Qdisc *sch,
 
 		return qdisc_enqueue_tail(skb, sch);
 	}
-	/* drop the packet if max_prob is set and PIE decides to enqueue the packet */
+	/* drop the packet if max_prob is set and pie decides to enqueue the packet */
 	else if (enqueue && q->params.max_prob) {
 	
 		q->params.max_prob = false;
