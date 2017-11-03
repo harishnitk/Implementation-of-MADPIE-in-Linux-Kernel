@@ -45,8 +45,8 @@ struct pie_params {
 	u32 beta;		/* and are used for shift relative to 1 */
 	bool ecn;		/* true if ecn is enabled */
 	bool bytemode;		/* to scale drop early prob based on pkt size */
-	bool isMADPIE; 		/* to enable or disable MADPIE */
-	bool m_maxProb;
+	bool madpie; 		/* to enable or disable madpie */
+	bool max_prob;
 	psched_time_t hard_delay; /* default 30ms */
 };
 
@@ -89,8 +89,8 @@ static void pie_params_init(struct pie_params *params)
 	params->ecn = false;
 	params->bytemode = false;
 	params->hard_delay = PSCHED_NS2TICKS(30 * NSEC_PER_MSEC); /* default 30ms */
-	params->isMADPIE = false;
-	params->m_maxProb = false;
+	params->madpie = false;
+	params->max_prob = false;
 }
 
 static void pie_vars_init(struct pie_vars *vars)
@@ -125,10 +125,10 @@ static bool drop_early(struct Qdisc *sch, u32 packet_size)
 	if (sch->qstats.backlog < 2 * mtu)
 		return false;
 
-	/* If m_maxProb is set and isMADPIE is enabled,
+	/* If max_prob is set and madpie is enabled,
 	 * don't mark the packet
 	 */
-	if (q->params.isMADPIE && q->params.m_maxProb)
+	if (q->params.madpie && q->params.max_prob)
 		return false;
 
 	/* If bytemode is turned on, use packet size to compute new
@@ -169,7 +169,7 @@ static int pie_qdisc_enqueue(struct sk_buff *skb, struct Qdisc *sch,
 	}
 
 	/* we can enqueue the packet */
-	if (enqueue && !q->params.m_maxProb) {
+	if (enqueue && !q->params.max_prob) {
 	    
 		q->stats.packets_in++;
 		if (qdisc_qlen(sch) > q->stats.maxq)
@@ -177,10 +177,10 @@ static int pie_qdisc_enqueue(struct sk_buff *skb, struct Qdisc *sch,
 
 		return qdisc_enqueue_tail(skb, sch);
 	}
-	/* drop the packet if m_maxProb is set and PIE decides to enqueue the packet */
-	else if (enqueue && q->params.m_maxProb) {
+	/* drop the packet if max_prob is set and PIE decides to enqueue the packet */
+	else if (enqueue && q->params.max_prob) {
 	
-		q->params.m_maxProb = false;
+		q->params.max_prob = false;
 		goto out;
 	}
 
@@ -401,8 +401,8 @@ static void calculate_probability(struct Qdisc *sch)
 
 	q->vars.prob += delta;
 
-	if (q->params.isMADPIE && (q->vars.qdelay>q->params.hard_delay))
-		q->params.m_maxProb = true;
+	if (q->params.madpie && (q->vars.qdelay>q->params.hard_delay))
+		q->params.max_prob = true;
 
 	if (delta > 0) {
 		/* prevent overflow */
