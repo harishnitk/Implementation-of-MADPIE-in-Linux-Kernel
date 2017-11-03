@@ -12,27 +12,27 @@ Maximum and Average queuing Delay with Proportional Integral controller Enhanced
 
 1. Configure the kernel
 
-`make menuconfig`
+   `make menuconfig`
 
 2. Compile the kernel
 
-`make`
+   `make`
 
 3. Build and install the modules
 
-`make modules`
+   `make modules`
 
-`make modules_install`
+   `make modules_install`
 
 4. Install the kernel
 
-`make install`
+   `make install`
 
 ### Testing the kernel using FLENT
 
 1. Setup a physical topology 
 
-`Client <---> Router <---> Server`
+   `Client <---> Router <---> Server`
 
 2. Create a separate passwordless ssh connection between client and router so that flent can collect queue statistics from router
 
