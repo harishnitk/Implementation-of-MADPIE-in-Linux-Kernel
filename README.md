@@ -42,11 +42,11 @@ Maximum and Average queuing Delay with Proportional Integral controller Enhanced
 
 5. Install the kernel in router machine
 
-6. Run FLENT for plotting differnt graphs 
+6. Run FLENT for plotting different graphs 
 
 #### Command
 
-   `./run-flent rrul -p [PLOT_NAME] -l 160 -H [SERVER_IP] --test-parameter bandwidth=800M --test-parameter qdisc_stats_hosts=          [ROUTER_SSH_IP] --test-parameter qdisc_stats_interfaces=[ROUTER_AQM_INTERFACE] --test-parameter upload_streams=num_cpus --test-     parameter download_streams=num_cpus -t MADPIE -o ~/Desktop/MADPIE/test.png`
+`./run-flent rrul -p [PLOT_NAME] -l 160 -H [SERVER_IP] --test-parameter bandwidth=800M --test-parameter qdisc_stats_hosts=[ROUTER_SSH_IP] --test-parameter qdisc_stats_interfaces=[ROUTER_AQM_INTERFACE] --test-parameter upload_streams=num_cpus --test-     parameter download_streams=num_cpus -t MADPIE -o ~/Desktop/MADPIE/test.png`
 
 PLOT_NAME - The type of graph needed
 
@@ -54,9 +54,11 @@ SERVER_IP - IP Address of the server
 
 ROUTER_SSH_IP - IP Address using which ssh connection is setup with router 
 
+ROUTER_AQM_INTERFACE - Interface name of the router where AQM is installed
+
 #### Example
 
-   `./run-flent rrul -p all_scaled -l 160 -H 172.16.10.2 --test-parameter bandwidth=800M --test-parameter qdisc_stats_hosts=           192.168.20.2 --test-parameter qdisc_stats_interfaces=eth1 --test-parameter upload_streams=num_cpus --test-parameter                 download_streams=num_cpus -t MADPIE -o ~/Desktop/MADPIE/test.png`
+`./run-flent rrul -p all_scaled -l 160 -H 172.16.10.2 --test-parameter bandwidth=800M --test-parameter qdisc_stats_hosts=192.168.20.2 --test-parameter qdisc_stats_interfaces=eth1 --test-parameter upload_streams=num_cpus --test-parameter download_streams=num_cpus -t MADPIE -o ~/Desktop/MADPIE/test.png`
 
 ### References
 
