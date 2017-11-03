@@ -48,7 +48,6 @@ struct pie_params {
 	bool isMADPIE; 		/* to enable or disable MADPIE */
 	bool m_maxProb;
 	psched_time_t hard_delay; /* default 30ms */
-
 };
 
 /* variables used */
