@@ -30,7 +30,7 @@ Maximum and Average queuing Delay with Proportional Integral controller Enhanced
 
    `make install`
 
-### Steps to test the functionality of MADPIE algorithm by using Flexible Network Tester (Flent) [3]
+### Steps to test the functionality of MADPIE AQM by using Flexible Network Tester (Flent) [3]
 
 1. Setup a physical topology of three nodes:
 
