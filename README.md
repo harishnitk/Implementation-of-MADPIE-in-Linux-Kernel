@@ -30,7 +30,7 @@ Maximum and Average queuing Delay with Proportional Integral controller Enhanced
 
    `make install`
 
-### Steps to test the functionality of MADPIE algorithm by using Flexible Network Tester (Flent)
+### Steps to test the functionality of MADPIE algorithm by using Flexible Network Tester (Flent) [3]
 
 1. Setup a physical topology of three nodes:
 
@@ -46,7 +46,7 @@ Maximum and Average queuing Delay with Proportional Integral controller Enhanced
 
 6. Run Flent for plotting different graphs 
 
-#### Commands to run Flent
+#### Syntax of the command to run Flent
 
 `./run-flent rrul -p [PLOT_NAME] -l 160 -H [SERVER_IP] --test-parameter bandwidth=800M --test-parameter qdisc_stats_hosts=[ROUTER_SSH_IP] --test-parameter qdisc_stats_interfaces=[ROUTER_AQM_INTERFACE] --test-parameter upload_streams=num_cpus --test-parameter download_streams=num_cpus -t MADPIE -o ~/Desktop/MADPIE/test.png`
 
@@ -58,7 +58,7 @@ ROUTER_SSH_IP - IP Address using which ssh connection is setup with router
 
 ROUTER_AQM_INTERFACE - Interface name of the router where AQM is installed
 
-#### Example command
+#### Example command to run Flent
 
 `./run-flent rrul -p all_scaled -l 160 -H 172.16.10.2 --test-parameter bandwidth=800M --test-parameter qdisc_stats_hosts=192.168.20.2 --test-parameter qdisc_stats_interfaces=eth1 --test-parameter upload_streams=num_cpus --test-parameter download_streams=num_cpus -t MADPIE -o ~/Desktop/MADPIE/test.png`
 
@@ -67,3 +67,5 @@ ROUTER_AQM_INTERFACE - Interface name of the router where AQM is installed
 [1] Kuhn, N., & Ros, D. (2016). Improving PIE's performance over high-delay paths. arXiv preprint arXiv:1602.00569.
 
 [2] Pan, R., Natarajan, P., Piglione, C., Prabhu, M. S., Subramanian, V., Baker, F., & VerSteeg, B. (2013, July). PIE: A lightweight control scheme to address the bufferbloat problem. In High Performance Switching and Routing (HPSR), 2013 IEEE 14th International Conference on (pp. 148-155). IEEE.
+
+[3] Flent: The FLExible Network Tester (https://flent.org/)
