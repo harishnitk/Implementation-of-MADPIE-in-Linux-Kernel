@@ -46,8 +46,8 @@ struct pie_params {
 	bool ecn;		/* true if ecn is enabled */
 	bool bytemode;		/* to scale drop early prob based on pkt size */
 	bool madpie; 		/* to enable or disable madpie */
-	bool max_prob;		/* deterministically drop the packets when set to true in madpie */
-	psched_time_t hard_delay; /* madpie starts deterministic packet drops after current delay becomes greater than hard delay */
+	bool max_prob;		      /* deterministically drop the packets if madpie is enabled */
+	psched_time_t hard_delay; /* starts deterministic packet drops after current delay becomes greater than hard delay if madpie is enabled */
 };
 
 /* variables used */
